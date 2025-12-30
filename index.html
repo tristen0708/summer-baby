@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pita Baby Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            left: -50px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(139, 195, 74, 0.3) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        body::after {
+            content: '';
+            position: absolute;
+            bottom: -50px;
+            right: -50px;
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, rgba(102, 187, 106, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 8s ease-in-out infinite reverse;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(20px, 20px); }
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .forest-accent {
+            margin-bottom: 20px;
+        }
+        
+        .forest-accent svg {
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+        }
+        
+        h1 {
+            color: #2e7d32;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: normal;
+        }
+        
+        .week-display {
+            font-size: 1.3em;
+            color: #558b2f;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+        
+        .pita-count {
+            font-size: 3em;
+            color: #1b5e20;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        
+        .pita-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin: 30px 0;
+            min-height: 150px;
+            align-items: center;
+        }
+        
+        .pita-quarter {
+            width: 70px;
+            height: 70px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><radialGradient id="pitaGrad" cx="30%" cy="30%"><stop offset="0%" style="stop-color:%23f5deb3;stop-opacity:1" /><stop offset="50%" style="stop-color:%23daa520;stop-opacity:1" /><stop offset="100%" style="stop-color:%23cd853f;stop-opacity:1" /></radialGradient></defs><path d="M 0 0 Q 50 10 100 0 L 100 100 Q 50 90 0 100 Z" fill="url(%23pitaGrad)"/><ellipse cx="25" cy="30" rx="8" ry="5" fill="%23cd853f" opacity="0.3"/><ellipse cx="45" cy="55" rx="6" ry="4" fill="%23cd853f" opacity="0.3"/><ellipse cx="70" cy="35" rx="7" ry="5" fill="%23cd853f" opacity="0.3"/><ellipse cx="60" cy="70" rx="5" ry="3" fill="%23cd853f" opacity="0.3"/><ellipse cx="30" cy="75" rx="6" ry="4" fill="%23cd853f" opacity="0.3"/></svg>');
+            background-size: cover;
+            background-position: center;
+            border-radius: 10px 50% 10px 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            transform: rotate(45deg);
+        }
+        
+        .message {
+            font-size: 1.2em;
+            color: #4a6741;
+            line-height: 1.6;
+            margin: 20px 0;
+        }
+        
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #c8e6c9;
+            color: #7cb342;
+            font-size: 0.9em;
+        }
+        
+        .tiny-text {
+            font-size: 0.8em;
+            color: #9e9e9e;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="forest-accent">
+            <svg viewBox="0 0 300 80" xmlns="http://www.w3.org/2000/svg">
+                <!-- Left tree -->
+                <polygon points="50,20 35,45 40,45 30,60 45,60 45,70 55,70 55,60 70,60 60,45 65,45" fill="#4a7c59"/>
+                <rect x="45" y="60" width="10" height="15" fill="#6d4c41"/>
+                
+                <!-- Middle tree (taller) -->
+                <polygon points="150,10 130,40 137,40 125,58 140,58 140,70 160,70 160,58 175,58 163,40 170,40" fill="#2e7d32"/>
+                <rect x="143" y="58" width="14" height="17" fill="#5d4037"/>
+                
+                <!-- Right tree -->
+                <polygon points="250,20 235,45 240,45 230,60 245,60 245,70 255,70 255,60 270,60 260,45 265,45" fill="#4a7c59"/>
+                <rect x="245" y="60" width="10" height="15" fill="#6d4c41"/>
+                
+                <!-- Leaves/foliage -->
+                <circle cx="90" cy="50" r="8" fill="#8bc34a" opacity="0.6"/>
+                <circle cx="105" cy="45" r="6" fill="#7cb342" opacity="0.6"/>
+                <circle cx="195" cy="48" r="7" fill="#8bc34a" opacity="0.6"/>
+                <circle cx="210" cy="52" r="9" fill="#7cb342" opacity="0.6"/>
+            </svg>
+        </div>
+        <h1>Pita Baby Tracker</h1>
+        <div class="week-display" id="weekDisplay">Loading...</div>
+        
+        <div class="pita-count" id="pitaCount">0 pitas</div>
+        
+        <div class="pita-container" id="pitaContainer"></div>
+        
+        <div class="message" id="message"></div>
+        
+        <div class="footer">
+            <div>Due Date: July 28, 2026</div>
+            <div class="tiny-text">Each pita quarter = 1 oz of baby cuteness</div>
+        </div>
+    </div>
+
+    <script>
+        // Fetal weight data by week (in ounces)
+        const fetalWeights = {
+            8: 0.04, 9: 0.07, 10: 0.14, 11: 0.25, 12: 0.49,
+            13: 0.81, 14: 1.52, 15: 2.47, 16: 3.53, 17: 4.94,
+            18: 6.70, 19: 8.47, 20: 10.58, 21: 12.70, 22: 15.17,
+            23: 1.10, 24: 1.32, 25: 1.46, 26: 1.68, 27: 1.93,
+            28: 2.22, 29: 2.54, 30: 2.91, 31: 3.31, 32: 3.75,
+            33: 4.23, 34: 4.73, 35: 5.25, 36: 5.78, 37: 6.30,
+            38: 6.80, 39: 7.25, 40: 7.63
+        };
+
+        // Correct week 23-40 (they were in pounds, converting to ounces)
+        for (let week = 23; week <= 40; week++) {
+            fetalWeights[week] = fetalWeights[week] * 16;
+        }
+
+        function calculateWeek(dueDate) {
+            const today = new Date();
+            const due = new Date(dueDate);
+            const diffTime = due - today;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            const weeksUntilDue = Math.floor(diffDays / 7);
+            const currentWeek = 40 - weeksUntilDue;
+            
+            return Math.max(8, Math.min(40, currentWeek));
+        }
+
+        function displayWeek() {
+            const dueDate = '2026-07-28';
+            const week = calculateWeek(dueDate);
+            const weight = fetalWeights[week] || 0;
+            const pitas = Math.round(weight);
+            
+            document.getElementById('weekDisplay').textContent = `Week ${week}`;
+            document.getElementById('pitaCount').textContent = `${pitas} pita${pitas !== 1 ? 's' : ''}`;
+            
+            // Create pita quarters
+            const container = document.getElementById('pitaContainer');
+            container.innerHTML = '';
+            
+            for (let i = 0; i < pitas; i++) {
+                const pita = document.createElement('div');
+                pita.className = 'pita-quarter';
+                container.appendChild(pita);
+            }
+            
+            // Fun messages
+            const messages = [
+                `Your little one is ${pitas} pita${pitas !== 1 ? 's' : ''} of pure joy! 🥙`,
+                `Growing strong at ${pitas} delicious pita${pitas !== 1 ? 's' : ''}! ✨`,
+                `That's ${pitas} pita${pitas !== 1 ? 's' : ''} worth of love! 💚`,
+                `${pitas} pita${pitas !== 1 ? 's' : ''} and counting! 🌟`
+            ];
+            
+            document.getElementById('message').textContent = messages[Math.floor(Math.random() * messages.length)];
+        }
+
+        displayWeek();
+    </script>
+</body>
+</html>
