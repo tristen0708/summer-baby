@@ -50,7 +50,7 @@
             font-size: 6em;
             color: #2c2c2c;
             font-weight: 700;
-            margin-bottom: 50px;
+            margin-bottom: 40px;
             animation: fallIn 1s ease-out;
         }
         
@@ -70,13 +70,13 @@
         
         .pita-container {
             width: 100%;
-            max-width: 2000px;
-            min-height: 300px;
+            max-width: 3000px;
+            min-height: 500px;
             display: flex;
             justify-content: center;
             align-items: center;
             position: relative;
-            margin: 40px 0;
+            margin: 50px 0;
         }
         
         .basket {
@@ -216,7 +216,7 @@
         }
 
         function displayWeek() {
-            const dueDate = '2026-04-28';
+            const dueDate = '2026-03-28';
             const week = calculateWeek(dueDate);
             const weight = fetalWeights[week] || 0;
             
