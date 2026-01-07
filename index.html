@@ -50,7 +50,7 @@
             font-size: 6em;
             color: #2c2c2c;
             font-weight: 700;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             animation: fallIn 1s ease-out;
         }
         
@@ -70,28 +70,30 @@
         
         .pita-container {
             width: 100%;
-            max-width: 1200px;
+            max-width: 100%;
             min-height: 300px;
             display: flex;
             justify-content: center;
             align-items: center;
             position: relative;
-            margin: 10px 0;
+            margin: 5px auto 0 auto;
+            padding: 0 40px;
         }
         
         .basket {
             position: relative;
             width: 100%;
+            max-width: 1600px;
             height: 100%;
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
             align-content: center;
-            gap: 35px;
+            gap: 40px;
         }
         
         .basket.stacked {
-            gap: 20px;
+            gap: 25px;
         }
         
         .pita-quarter {
@@ -245,11 +247,14 @@
                 
                 if (shouldStack) {
                     const angle = (i * 15) % 360;
-                    const offsetX = (i % 8) * 8 - 28;
-                    const offsetY = Math.floor(i / 8) * 8 - Math.floor(wholePitas / 16) * 4;
-                    pita.style.transform = `rotate(${angle}deg)`;
-                    pita.style.left = `calc(50% + ${offsetX}px)`;
-                    pita.style.top = `calc(50% + ${offsetY}px)`;
+                    const row = Math.floor(i / 10);
+                    const col = i % 10;
+                    const offsetX = (col - 4.5) * 120;
+                    const offsetY = row * 140;
+                    pita.style.transform = `translate(${offsetX}px, ${offsetY}px) rotate(${angle}deg)`;
+                    pita.style.position = 'absolute';
+                    pita.style.left = '50%';
+                    pita.style.top = '0';
                     pita.style.zIndex = i;
                 }
                 
@@ -262,11 +267,14 @@
                 halfPita.style.setProperty('--i', wholePitas);
                 
                 if (shouldStack) {
-                    const offsetX = (wholePitas % 8) * 8 - 28;
-                    const offsetY = Math.floor(wholePitas / 8) * 8 - Math.floor(wholePitas / 16) * 4;
-                    halfPita.style.transform = `rotate(${(wholePitas * 15) % 360}deg)`;
-                    halfPita.style.left = `calc(50% + ${offsetX}px)`;
-                    halfPita.style.top = `calc(50% + ${offsetY}px)`;
+                    const row = Math.floor(wholePitas / 10);
+                    const col = wholePitas % 10;
+                    const offsetX = (col - 4.5) * 120;
+                    const offsetY = row * 140;
+                    halfPita.style.transform = `translate(${offsetX}px, ${offsetY}px) rotate(${(wholePitas * 15) % 360}deg)`;
+                    halfPita.style.position = 'absolute';
+                    halfPita.style.left = '50%';
+                    halfPita.style.top = '0';
                     halfPita.style.zIndex = wholePitas;
                 }
                 
