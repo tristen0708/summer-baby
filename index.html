@@ -1,288 +1,555 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pita Baby Tracker</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@300;400;600;700&display=swap');
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Source Serif 4', serif;
-            background: #f5f5dc;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 40px;
-        }
-        
-        .container {
-            text-align: center;
-            max-width: 1400px;
-            width: 100%;
-        }
-        
-        .week-label {
-            font-size: 1.2em;
-            color: #666;
-            margin-bottom: 30px;
-            font-weight: 300;
-            letter-spacing: 1px;
-            text-decoration: underline;
-        }
-        
-        h1 {
-            font-size: 3.5em;
-            color: #2c2c2c;
-            margin-bottom: 40px;
-            font-weight: 400;
-            line-height: 1.3;
-        }
-        
-        .pita-count {
-            font-size: 6em;
-            color: #2c2c2c;
-            font-weight: 700;
-            margin-bottom: 10px;
-            animation: fallIn 1s ease-out;
-        }
-        
-        @keyframes fallIn {
-            0% {
-                opacity: 0;
-                transform: translateY(-100px) scale(0.5);
-            }
-            60% {
-                transform: translateY(10px) scale(1.05);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-        
-        .pita-container {
-            width: 100%;
-            max-width: 100%;
-            min-height: 300px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            margin: 5px auto 0 auto;
-            padding: 0 40px;
-        }
-        
-        .basket {
-            position: relative;
-            width: 100%;
-            max-width: 1600px;
-            height: 100%;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-content: center;
-            gap: 40px;
-        }
-        
-        .basket.stacked {
-            gap: 25px;
-        }
-        
-        .pita-quarter {
-            width: 110px;
-            height: 130px;
-            position: relative;
-            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.1));
-            opacity: 0;
-            animation: fallAndLand 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
-            animation-delay: calc(var(--i) * 0.15s);
-        }
-        
-        .pita-quarter::before {
-            content: '';
-            position: absolute;
-            width: 110px;
-            height: 130px;
-            background: 
-                linear-gradient(145deg, 
-                    #f5deb3 0%, 
-                    #f4d03f 20%, 
-                    #daa520 50%, 
-                    #cd853f 80%, 
-                    #b8860b 100%),
-                repeating-linear-gradient(
-                    -45deg,
-                    transparent,
-                    transparent 15px,
-                    rgba(139, 69, 19, 0.2) 15px,
-                    rgba(139, 69, 19, 0.2) 18px
-                );
-            background-blend-mode: multiply;
-            clip-path: path('M 55 10 Q 20 60 10 120 Q 10 125 15 128 L 95 128 Q 100 125 100 120 Q 90 60 55 10 Z');
-        }
-        
-        .pita-quarter::after {
-            content: '';
-            position: absolute;
-            width: 110px;
-            height: 130px;
-            background: 
-                radial-gradient(circle at 30% 25%, rgba(139, 69, 19, 0.4) 0%, transparent 8%),
-                radial-gradient(circle at 60% 30%, rgba(160, 82, 45, 0.35) 0%, transparent 10%),
-                radial-gradient(circle at 45% 50%, rgba(139, 69, 19, 0.3) 0%, transparent 7%),
-                radial-gradient(circle at 70% 55%, rgba(101, 67, 33, 0.4) 0%, transparent 9%),
-                radial-gradient(circle at 35% 70%, rgba(139, 69, 19, 0.35) 0%, transparent 8%),
-                radial-gradient(circle at 65% 75%, rgba(160, 82, 45, 0.3) 0%, transparent 10%),
-                radial-gradient(circle at 50% 85%, rgba(139, 69, 19, 0.35) 0%, transparent 11%),
-                radial-gradient(circle at 25% 90%, rgba(101, 67, 33, 0.3) 0%, transparent 8%),
-                radial-gradient(ellipse at 55% 25%, rgba(245, 222, 179, 0.4) 0%, transparent 50%);
-            clip-path: path('M 55 10 Q 20 60 10 120 Q 10 125 15 128 L 95 128 Q 100 125 100 120 Q 90 60 55 10 Z');
-            box-shadow: inset 0 3px 20px rgba(0,0,0,0.15),
-                        inset 0 -3px 20px rgba(255,255,255,0.2);
-        }
-        
-        @keyframes fallAndLand {
-            0% {
-                opacity: 0;
-                transform: translateY(-500px) rotate(0deg) scale(0.5);
-            }
-            60% {
-                opacity: 1;
-                transform: translateY(20px) rotate(180deg) scale(1.1);
-            }
-            80% {
-                transform: translateY(-10px) rotate(360deg) scale(0.95);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0) rotate(360deg) scale(1);
-            }
-        }
-        
-        .basket.stacked .pita-quarter {
-            position: absolute;
-        }
-        
-        .pita-half {
-            opacity: 0.85;
-            width: 120px;
-            height: 120px;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pita baby tracker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #f5f0e8;
+      --navy: #1a2744;
+      --blue: #7ab3d0;
+      --red: #c0392b;
+      --pita-gold: #d4a843;
+      --pita-dark: #a87830;
+      --pita-light: #e8c878;
+      --pita-grill: #8b5e20;
+    }
+
+    html, body {
+      height: 100%;
+      overflow-x: hidden;
+    }
+
+    body {
+      background-color: var(--cream);
+      font-family: 'Source Serif 4', Georgia, serif;
+      color: var(--navy);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* ── header section ── */
+    .header {
+      width: 100%;
+      text-align: center;
+      padding: 48px 24px 24px;
+      position: relative;
+      z-index: 1;
+      /* no background block — pitas will float over this */
+    }
+
+    .week-label {
+      font-size: 1rem;
+      letter-spacing: 0.15em;
+      text-decoration: underline;
+      text-underline-offset: 4px;
+      color: var(--navy);
+      margin-bottom: 12px;
+      font-weight: 300;
+    }
+
+    .title {
+      font-size: clamp(1.4rem, 4vw, 2rem);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--navy);
+      margin-bottom: 20px;
+      line-height: 1.3;
+    }
+
+    .pita-count {
+      font-size: clamp(3rem, 10vw, 5.5rem);
+      font-weight: 600;
+      color: #660033;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .pita-count span {
+      font-weight: 300;
+      font-size: 0.55em;
+      color: var(--navy);
+      vertical-align: middle;
+    }
+
+    .weight-note {
+      font-size: 0.85rem;
+      color: var(--navy);
+      opacity: 0.6;
+      font-style: italic;
+      margin-bottom: 10px;
+    }
+
+    /* ── game instructions ── */
+    .game-instructions {
+      background: var(--navy);
+      color: var(--cream);
+      border-radius: 12px;
+      padding: 10px 22px;
+      font-size: 0.8rem;
+      letter-spacing: 0.06em;
+      display: inline-block;
+      margin-bottom: 8px;
+      opacity: 0.85;
+    }
+
+    .game-instructions kbd {
+      background: var(--cream);
+      color: var(--navy);
+      border-radius: 4px;
+      padding: 1px 6px;
+      font-family: inherit;
+      font-size: 0.95em;
+      font-weight: 600;
+    }
+
+    .score-display {
+      font-size: 0.85rem;
+      color: var(--navy);
+      opacity: 0.7;
+      margin-bottom: 4px;
+    }
+
+    /* ── game arena ── */
+    #game-arena {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 50;
+      overflow: hidden;
+    }
+
+    /* re-enable pointer events for touch on arena */
+    #game-arena.touch-active {
+      pointer-events: all;
+    }
+
+    /* pita z-index above everything */
+
+    /* ── pita SVG graphic ── */
+    .pita {
+      position: absolute;
+      width: 70px;
+      height: 55px;
+      transform-origin: center bottom;
+      user-select: none;
+      pointer-events: none;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.18));
+      z-index: 51;
+    }
+
+    .pita svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* ── stack score flash ── */
+    .score-flash {
+      position: absolute;
+      font-family: 'Source Serif 4', serif;
+      font-size: 1.1rem;
+      font-style: italic;
+      color: var(--red);
+      pointer-events: none;
+      animation: floatUp 1.2s ease-out forwards;
+      white-space: nowrap;
+      z-index: 52;
+    }
+
+    @keyframes floatUp {
+      0%   { opacity: 1; transform: translateY(0) scale(1); }
+      100% { opacity: 0; transform: translateY(-60px) scale(1.2); }
+    }
+
+    /* ── mobile touch hint ── */
+    .mobile-hint {
+      display: none;
+      font-size: 0.78rem;
+      color: var(--navy);
+      opacity: 0.55;
+      font-style: italic;
+      text-align: center;
+      padding: 4px 0 12px;
+    }
+
+    @media (max-width: 600px) {
+      .mobile-hint { display: block; }
+      .game-instructions { font-size: 0.72rem; padding: 8px 14px; }
+    }
+
+    /* ── restart button ── */
+    .restart-btn {
+      background: none;
+      border: 1.5px solid var(--navy);
+      color: var(--navy);
+      font-family: 'Source Serif 4', serif;
+      font-size: 0.8rem;
+      padding: 6px 18px;
+      border-radius: 20px;
+      cursor: pointer;
+      margin-bottom: 8px;
+      letter-spacing: 0.08em;
+      transition: background 0.2s, color 0.2s;
+    }
+    .restart-btn:hover {
+      background: var(--navy);
+      color: var(--cream);
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.72rem;
+      color: var(--navy);
+      opacity: 0.35;
+      padding: 16px;
+      font-style: italic;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="week-label" id="weekDisplay">week 10</div>
-        
-        <h1>how many pitas is baby g this week?</h1>
-        
-        <div class="pita-count" id="pitaCount">0.5</div>
-        
-        <div class="pita-container">
-            <div class="basket" id="pitaContainer"></div>
-        </div>
+
+<div class="header">
+  <div class="week-label" id="week-label">week —</div>
+  <div class="title">how many pitas is baby g this week?</div>
+  <div class="pita-count" id="pita-count">— <span>pitas!</span></div>
+  <div class="weight-note" id="weight-note"></div>
+  <div class="game-instructions">
+    use <kbd>←</kbd> <kbd>→</kbd> arrow keys to guide the falling pita &nbsp;·&nbsp; stack them up!
+  </div>
+  <div class="mobile-hint">tap left / right sides of the screen to move</div>
+  <br>
+  <div class="score-display">stacked: <strong id="stack-score">0</strong> &nbsp;|&nbsp; dropped: <strong id="drop-score">0</strong></div>
+  <button class="restart-btn" onclick="restartGame()">restart pitas ↺</button>
+</div>
+
+<div id="game-arena"></div>
+
+<footer>1 pita = 1 oz ✦ baby g is growing!</footer>
+
+<script>
+// ── Pregnancy data ──────────────────────────────────────────────
+const DUE_DATE = new Date('2026-07-28');
+
+const FETAL_WEIGHTS = {
+   8: 0.04,  9: 0.07, 10: 0.14, 11: 0.25, 12: 0.49,
+  13: 0.81, 14: 1.52, 15: 2.47, 16: 3.53, 17: 4.94,
+  18: 6.70, 19: 8.47, 20: 10.58, 21: 12.70, 22: 15.17,
+  23: 17.64, 24: 21.16, 25: 24.69, 26: 27.21, 27: 29.74,
+  28: 35.27, 29: 40.79, 30: 47.40, 31: 54.01, 32: 63.93,
+  33: 77.16, 34: 88.18, 35: 101.41, 36: 114.64, 37: 128.97,
+  38: 140.00, 39: 149.91, 40: 159.83
+};
+
+function getCurrentWeek() {
+  const today = new Date();
+  const conceptionApprox = new Date(DUE_DATE);
+  conceptionApprox.setDate(conceptionApprox.getDate() - 280);
+  const msPerWeek = 7 * 24 * 60 * 60 * 1000;
+  const week = Math.floor((today - conceptionApprox) / msPerWeek);
+  return Math.min(Math.max(week, 8), 40);
+}
+
+function getWeightOz(week) {
+  const wks = Object.keys(FETAL_WEIGHTS).map(Number).sort((a,b)=>a-b);
+  let w = FETAL_WEIGHTS[week];
+  if (!w) {
+    const lower = wks.filter(k => k <= week).pop();
+    const upper = wks.filter(k => k >= week).shift();
+    if (lower && upper && lower !== upper) {
+      const t = (week - lower) / (upper - lower);
+      w = FETAL_WEIGHTS[lower] + t * (FETAL_WEIGHTS[upper] - FETAL_WEIGHTS[lower]);
+    } else {
+      w = FETAL_WEIGHTS[lower || upper];
+    }
+  }
+  return w;
+}
+
+function toPitas(oz) {
+  const raw = oz;
+  return Math.max(0.5, Math.round(raw * 2) / 2);
+}
+
+// ── Setup header ────────────────────────────────────────────────
+const week = getCurrentWeek();
+const weightOz = getWeightOz(week);
+const pitaCount = toPitas(weightOz);
+
+document.getElementById('week-label').textContent = `week ${week}`;
+document.getElementById('pita-count').innerHTML = `${pitaCount} <span>pitas!</span>`;
+document.getElementById('weight-note').textContent = `≈ ${weightOz.toFixed(1)} oz this week`;
+
+// ── Pita SVG generator ──────────────────────────────────────────
+function makePitaSVG(seed = 0) {
+  // slight color variation per pita
+  const hue = 38 + (seed % 7) * 2;
+  const spotX = 20 + (seed * 17) % 30;
+  const spotX2 = 40 + (seed * 11) % 20;
+
+  return `<svg viewBox="0 0 70 55" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="pg${seed}" cx="50%" cy="40%" r="60%">
+        <stop offset="0%" stop-color="hsl(${hue},72%,78%)"/>
+        <stop offset="60%" stop-color="hsl(${hue},65%,60%)"/>
+        <stop offset="100%" stop-color="hsl(${hue-8},60%,42%)"/>
+      </radialGradient>
+      <radialGradient id="edge${seed}" cx="50%" cy="80%" r="55%">
+        <stop offset="0%" stop-color="hsl(${hue-10},55%,35%)" stop-opacity="0.5"/>
+        <stop offset="100%" stop-color="transparent"/>
+      </radialGradient>
+    </defs>
+    <!-- pita wedge shape -->
+    <path d="M35,2 Q68,4 68,30 Q68,52 35,54 Q2,52 2,30 Q2,4 35,2 Z"
+          fill="url(#pg${seed})" stroke="hsl(${hue-15},55%,35%)" stroke-width="1.2"/>
+    <path d="M35,2 Q68,4 68,30 Q68,52 35,54 Q2,52 2,30 Q2,4 35,2 Z"
+          fill="url(#edge${seed})"/>
+    <!-- grill marks -->
+    <line x1="18" y1="18" x2="52" y2="18" stroke="hsl(${hue-20},50%,28%)" stroke-width="2" stroke-linecap="round" opacity="0.55"/>
+    <line x1="14" y1="27" x2="56" y2="27" stroke="hsl(${hue-20},50%,28%)" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+    <line x1="16" y1="36" x2="54" y2="36" stroke="hsl(${hue-20},50%,28%)" stroke-width="2" stroke-linecap="round" opacity="0.45"/>
+    <!-- toasted spots -->
+    <ellipse cx="${spotX}" cy="22" rx="5" ry="3.5" fill="hsl(${hue-25},50%,32%)" opacity="0.3"/>
+    <ellipse cx="${spotX2}" cy="38" rx="4" ry="3" fill="hsl(${hue-25},50%,32%)" opacity="0.25"/>
+    <!-- shine -->
+    <ellipse cx="28" cy="16" rx="10" ry="5" fill="white" opacity="0.12"/>
+  </svg>`;
+}
+
+// ── Physics engine ──────────────────────────────────────────────
+const arena = document.getElementById('game-arena');
+const PITA_W = 70, PITA_H = 55;
+const GRAVITY = 0.32;
+const BOUNCE = 0.22;
+const FRICTION = 0.88;
+const PLAYER_SPEED = 6;
+
+let activePita = null;   // the one the player controls
+let staticPitas = [];    // landed pitas (as {x, y, rot, el})
+let keys = { left: false, right: false };
+let stackScore = 0, dropScore = 0;
+let gameRunning = true;
+let spawnTimer = null;
+let animId = null;
+let pitaIndex = 0;
+
+function arenaWidth()  { return window.innerWidth; }
+function arenaHeight() { return window.innerHeight; }
+
+function getGroundY() {
+  // ground = bottom of arena (accounting for pita height)
+  return arenaHeight() - PITA_H;
+}
+
+function getStackTop(x) {
+  // find the highest landed pita within horizontal range of x
+  let top = getGroundY();
+  for (const p of staticPitas) {
+    const overlap = Math.abs(p.x - x) < PITA_W * 0.75;
+    if (overlap) {
+      top = Math.min(top, p.y - PITA_H * 0.6);
+    }
+  }
+  return top;
+}
+
+function spawnPita() {
+  if (!gameRunning) return;
+  if (pitaIndex >= pitaCount) {
+    // all pitas have fallen — game over
+    setTimeout(showGameOver, 600);
+    return;
+  }
+  const seed = pitaIndex++;
+  const el = document.createElement('div');
+  el.className = 'pita';
+  el.innerHTML = makePitaSVG(seed % 12);
+  arena.appendChild(el);
+
+  // random X anywhere across the arena width (with padding so pita isn't half off-screen)
+  const margin = PITA_W;
+  const startX = margin + Math.random() * (arenaWidth() - margin * 2);
+
+  activePita = {
+    el,
+    x: startX,
+    y: -PITA_H,
+    vy: 1.5,
+    rot: 0,
+    rotV: (Math.random() - 0.5) * 1.2,
+    landed: false,
+    bounces: 0,
+    seed,
+  };
+  updatePitaEl(activePita);
+}
+
+function updatePitaEl(p) {
+  p.el.style.left = p.x + 'px';
+  p.el.style.top  = p.y + 'px';
+  p.el.style.transform = `rotate(${p.rot}deg)`;
+}
+
+function landPita(p) {
+  p.landed = true;
+  const landed = { x: p.x, y: p.y, rot: p.rot, el: p.el };
+  staticPitas.push(landed);
+  // check if landed "on stack" vs dropped off sides
+  const inBounds = p.x > -PITA_W * 0.5 && p.x < arenaWidth() - PITA_W * 0.5;
+  if (inBounds) {
+    stackScore++;
+    document.getElementById('stack-score').textContent = stackScore;
+    showScoreFlash(p.x + PITA_W/2, p.y, '+1 stack!');
+  } else {
+    dropScore++;
+    document.getElementById('drop-score').textContent = dropScore;
+  }
+  activePita = null;
+  // spawn next after brief delay (spawnPita will check the cap)
+  spawnTimer = setTimeout(spawnPita, 900);
+}
+
+function showGameOver() {
+  gameRunning = false;
+  cancelAnimationFrame(animId);
+  const f = document.createElement('div');
+  f.id = 'game-over';
+  f.style.cssText = `
+    position:fixed; top:50%; left:50%; transform:translate(-50%,-50%);
+    background: var(--cream); border: 2px solid var(--navy);
+    border-radius: 16px; padding: 28px 40px; text-align: center;
+    font-family: 'Source Serif 4', serif; color: var(--navy);
+    z-index: 200; box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+  `;
+  f.innerHTML = `
+    <div style="font-size:2rem; margin-bottom:6px;">🫓</div>
+    <div style="font-size:1.3rem; font-weight:600; margin-bottom:4px;">all ${pitaCount} pitas landed!</div>
+    <div style="font-size:0.9rem; font-style:italic; opacity:0.7; margin-bottom:18px;">
+      stacked: <strong>${stackScore}</strong> &nbsp;·&nbsp; dropped: <strong>${dropScore}</strong>
     </div>
+    <button onclick="restartGame()" style="
+      background: var(--navy); color: var(--cream); border: none;
+      font-family: 'Source Serif 4', serif; font-size: 0.85rem;
+      padding: 8px 22px; border-radius: 20px; cursor: pointer; letter-spacing: 0.08em;
+    ">play again ↺</button>
+  `;
+  document.body.appendChild(f);
+}
 
-    <script>
-        const fetalWeights = {
-            8: 0.04, 9: 0.07, 10: 0.14, 11: 0.25, 12: 0.49,
-            13: 0.81, 14: 1.52, 15: 2.47, 16: 3.53, 17: 4.94,
-            18: 6.70, 19: 8.47, 20: 10.58, 21: 12.70, 22: 15.17,
-            23: 1.10, 24: 1.32, 25: 1.46, 26: 1.68, 27: 1.93,
-            28: 2.22, 29: 2.54, 30: 2.91, 31: 3.31, 32: 3.75,
-            33: 4.23, 34: 4.73, 35: 5.25, 36: 5.78, 37: 6.30,
-            38: 6.80, 39: 7.25, 40: 7.63
-        };
+function showScoreFlash(x, y, text) {
+  const f = document.createElement('div');
+  f.className = 'score-flash';
+  f.textContent = text;
+  f.style.left = (x - 30) + 'px';
+  f.style.top  = y + 'px';
+  arena.appendChild(f);
+  setTimeout(() => f.remove(), 1300);
+}
 
-        for (let week = 23; week <= 40; week++) {
-            fetalWeights[week] = fetalWeights[week] * 16;
-        }
+function gameLoop() {
+  if (!gameRunning) return;
+  animId = requestAnimationFrame(gameLoop);
 
-        function calculateWeek(dueDate) {
-            const today = new Date();
-            const due = new Date(dueDate);
-            const diffTime = due - today;
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            const weeksUntilDue = Math.floor(diffDays / 7);
-            const currentWeek = 40 - weeksUntilDue;
-            
-            return Math.max(8, Math.min(40, currentWeek));
-        }
+  if (!activePita) return;
+  const p = activePita;
 
-        function displayWeek() {
-            const dueDate = '2026-04-28';
-            const week = calculateWeek(dueDate);
-            const weight = fetalWeights[week] || 0;
-            
-            const pitas = Math.max(0.5, Math.round(weight * 2) / 2);
-            
-            const wholePitas = Math.floor(pitas);
-            const hasHalf = (pitas % 1) !== 0;
-            
-            document.getElementById('weekDisplay').textContent = `week ${week}`;
-            document.getElementById('pitaCount').textContent = `${pitas} pitas!`;
-            
-            const container = document.getElementById('pitaContainer');
-            container.innerHTML = '';
-            
-            const shouldStack = pitas > 20;
-            if (shouldStack) {
-                container.classList.add('stacked');
-            } else {
-                container.classList.remove('stacked');
-            }
-            
-            for (let i = 0; i < wholePitas; i++) {
-                const pita = document.createElement('div');
-                pita.className = 'pita-quarter';
-                pita.style.setProperty('--i', i);
-                
-                if (shouldStack) {
-                    const angle = (i * 15) % 360;
-                    const row = Math.floor(i / 10);
-                    const col = i % 10;
-                    const offsetX = (col - 4.5) * 120;
-                    const offsetY = row * 140;
-                    pita.style.transform = `translate(${offsetX}px, ${offsetY}px) rotate(${angle}deg)`;
-                    pita.style.position = 'absolute';
-                    pita.style.left = '50%';
-                    pita.style.top = '0';
-                    pita.style.zIndex = i;
-                }
-                
-                container.appendChild(pita);
-            }
-            
-            if (hasHalf) {
-                const halfPita = document.createElement('div');
-                halfPita.className = 'pita-quarter pita-half';
-                halfPita.style.setProperty('--i', wholePitas);
-                
-                if (shouldStack) {
-                    const row = Math.floor(wholePitas / 10);
-                    const col = wholePitas % 10;
-                    const offsetX = (col - 4.5) * 120;
-                    const offsetY = row * 140;
-                    halfPita.style.transform = `translate(${offsetX}px, ${offsetY}px) rotate(${(wholePitas * 15) % 360}deg)`;
-                    halfPita.style.position = 'absolute';
-                    halfPita.style.left = '50%';
-                    halfPita.style.top = '0';
-                    halfPita.style.zIndex = wholePitas;
-                }
-                
-                container.appendChild(halfPita);
-            }
-        }
+  // player control
+  if (keys.left)  p.x -= PLAYER_SPEED;
+  if (keys.right) p.x += PLAYER_SPEED;
+  if (keys.left || keys.right) p.rotV += (keys.left ? -0.3 : 0.3);
 
-        displayWeek();
-    </script>
+  // gravity
+  p.vy += GRAVITY;
+  p.y  += p.vy;
+  p.rot += p.rotV;
+  p.rotV *= 0.97;
+
+  // find surface below this pita
+  const surface = getStackTop(p.x + PITA_W / 2);
+
+  if (p.y >= surface) {
+    p.y = surface;
+    if (Math.abs(p.vy) < 1.2) {
+      landPita(p);
+      return;
+    }
+    p.vy = -p.vy * BOUNCE;
+    p.rotV *= FRICTION;
+    p.bounces++;
+    if (p.bounces > 5) {
+      landPita(p);
+      return;
+    }
+  }
+
+  // wall clamp (soft)
+  if (p.x < -PITA_W * 0.8) p.x = -PITA_W * 0.8;
+  if (p.x > arenaWidth() - PITA_W * 0.2) p.x = arenaWidth() - PITA_W * 0.2;
+
+  updatePitaEl(p);
+}
+
+// ── Controls ─────────────────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')  { keys.left  = true; e.preventDefault(); }
+  if (e.key === 'ArrowRight') { keys.right = true; e.preventDefault(); }
+});
+document.addEventListener('keyup', e => {
+  if (e.key === 'ArrowLeft')  keys.left  = false;
+  if (e.key === 'ArrowRight') keys.right = false;
+});
+
+// Mobile touch
+let touchStartX = null;
+arena.addEventListener('touchstart', e => {
+  touchStartX = e.touches[0].clientX;
+}, { passive: true });
+arena.addEventListener('touchmove', e => {
+  if (touchStartX === null) return;
+  const cx = e.touches[0].clientX;
+  const mid = window.innerWidth / 2;
+  keys.left  = cx < mid;
+  keys.right = cx >= mid;
+}, { passive: true });
+arena.addEventListener('touchend', () => {
+  keys.left = false; keys.right = false;
+});
+
+// ── Restart ───────────────────────────────────────────────────────
+function restartGame() {
+  gameRunning = false;
+  cancelAnimationFrame(animId);
+  clearTimeout(spawnTimer);
+  arena.innerHTML = '';
+  const over = document.getElementById('game-over');
+  if (over) over.remove();
+  staticPitas = [];
+  activePita = null;
+  stackScore = 0; dropScore = 0;
+  pitaIndex = 0;
+  keys = { left: false, right: false };
+  document.getElementById('stack-score').textContent = '0';
+  document.getElementById('drop-score').textContent  = '0';
+  gameRunning = true;
+  spawnPita();
+  gameLoop();
+}
+
+// ── Init ──────────────────────────────────────────────────────────
+// Wait for fonts + layout
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    spawnPita();
+    gameLoop();
+  }, 300);
+});
+</script>
 </body>
 </html>
