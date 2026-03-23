@@ -224,7 +224,7 @@
   <div class="game-instructions">
     use <kbd>←</kbd> <kbd>→</kbd> arrow keys to guide the falling pita &nbsp;·&nbsp; stack them up!
   </div>
-  <div class="mobile-hint">tap left / right sides of the screen to move</div>
+  <div class="mobile-hint">drag your thumb left / right anywhere to steer</div>
   <br>
   <div class="score-display">stacked: <strong id="stack-score">0</strong> &nbsp;|&nbsp; dropped: <strong id="drop-score">0</strong></div>
   <button class="restart-btn" onclick="restartGame()">restart pitas ↺</button>
@@ -326,7 +326,7 @@ function makePitaSVG(seed = 0) {
 // ── Physics engine ──────────────────────────────────────────────
 const arena = document.getElementById('game-arena');
 const PITA_W = 70, PITA_H = 55;
-const GRAVITY = 0.22;
+const GRAVITY = 0.25;
 const BOUNCE = 0.22;
 const FRICTION = 0.88;
 const PLAYER_SPEED = 6;
@@ -506,20 +506,27 @@ document.addEventListener('keyup', e => {
   if (e.key === 'ArrowRight') keys.right = false;
 });
 
-// Mobile touch
-let touchStartX = null;
-arena.addEventListener('touchstart', e => {
-  touchStartX = e.touches[0].clientX;
+// Mobile touch — drag anywhere on screen to steer
+// Uses document-level listeners so pointer-events:none on arena doesn't block it
+let lastTouchX = null;
+const TOUCH_SENSITIVITY = 0.9; // multiplier: drag pixels → pita pixels
+
+document.addEventListener('touchstart', e => {
+  lastTouchX = e.touches[0].clientX;
 }, { passive: true });
-arena.addEventListener('touchmove', e => {
-  if (touchStartX === null) return;
+
+document.addEventListener('touchmove', e => {
+  if (lastTouchX === null || !activePita) return;
   const cx = e.touches[0].clientX;
-  const mid = window.innerWidth / 2;
-  keys.left  = cx < mid;
-  keys.right = cx >= mid;
+  const delta = cx - lastTouchX;
+  lastTouchX = cx;
+  // directly move the pita by drag delta, add spin proportionally
+  activePita.x += delta * TOUCH_SENSITIVITY;
+  activePita.rotV += delta * 0.04;
 }, { passive: true });
-arena.addEventListener('touchend', () => {
-  keys.left = false; keys.right = false;
+
+document.addEventListener('touchend', () => {
+  lastTouchX = null;
 });
 
 // ── Restart ───────────────────────────────────────────────────────
